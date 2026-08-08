@@ -62,16 +62,3 @@ docker logout ghcr.io
 docker login ghcr.io
 docker push ghcr.io/srujankn762/hello-world-image:latest
 ```
-
-## Kubernetes
-
-Deployment YAML ನಲ್ಲಿ:
-
-``` yaml
-image: ghcr.io/srujankn762/hello-world-image:latest
-```
-
-## Flow
-
-Dockerfile ↓ docker build ↓ docker tag ↓ docker login ghcr.io ↓ docker
-push ↓ GHCR ↓ Kubernetes
