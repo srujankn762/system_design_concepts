@@ -224,7 +224,7 @@ docker run hello-world-image
 Correct:
 
 ``` bash
-docker run -p 8000:8000 hello-world-image
+docker run -p 8008:8055 hello-world-image
 ```
 
 ### DisallowedHost
@@ -232,10 +232,10 @@ docker run -p 8000:8000 hello-world-image
 Open:
 
 ``` text
-http://localhost:8000
+http://localhost:8008
 ```
 
-(Not `0.0.0.0:8000`)
+(Not `0.0.0.0:8008`)
 
 ------------------------------------------------------------------------
 
@@ -250,9 +250,9 @@ Write Dockerfile
 ↓
 docker build -t hello-world-image .
 ↓
-docker run -p 8000:8000 hello-world-image
+docker run -p 8008:8055 hello-world-image
 ↓
-http://localhost:8000
+http://localhost:8008
 ↓
 Application Running 🚀
 ```
