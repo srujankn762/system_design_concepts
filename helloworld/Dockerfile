@@ -13,6 +13,6 @@ RUN pip install -r requirements.txt
 
 COPY . /srujan
 
-EXPOSE 8000
+EXPOSE 8055
 
-CMD ["gunicorn", "helloworld.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+CMD ["gunicorn", "helloworld.wsgi:application", "--bind", "0.0.0.0:8055", "--workers", "3"]
