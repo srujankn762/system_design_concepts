@@ -58,22 +58,29 @@ pipeline {
 
         stage('Update Kubernetes Manifest') {
             steps {
-                sh '''
-                    sed -i "s|image: ghcr.io/srujankn762/hello-world-image:.*|image: ghcr.io/srujankn762/hello-world-image:${COMMIT_ID}|" \
-                        helloworld/k8s/deployment.yaml
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'ghcr-credentials',
+                        usernameVariable: 'GH_USER',
+                        passwordVariable: 'GH_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        sed -i "s|image: ghcr.io/srujankn762/hello-world-image:.*|image: ghcr.io/srujankn762/hello-world-image:${COMMIT_ID}|" \
+                            helloworld/k8s/deployment.yaml
 
-                    git config user.name "jenkins"
-                    git config user.email "jenkins@localhost"
+                        git config user.name "jenkins"
+                        git config user.email "jenkins@localhost"
 
-                    git add helloworld/k8s/deployment.yaml
+                        git add helloworld/k8s/deployment.yaml
 
-                    git commit -m "ci: deploy ${COMMIT_ID}" || echo "No manifest changes"
+                        git commit -m "ci: deploy ${COMMIT_ID}" || echo "No manifest changes"
 
-                    git push origin HEAD:main
-                '''
+                        git push https://${GH_USER}:${GH_TOKEN}@github.com/srujankn762/system_design_concepts.git HEAD:main
+                    '''
+                }
             }
         }
-    }
 
     post {
         success {
