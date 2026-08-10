@@ -1,6 +1,7 @@
-from django.urls import path
-from .views import hello_world
+from rest_framework.routers import DefaultRouter
+from .views import EmployeeViewSet
 
-urlpatterns = [
-    path('hello/', hello_world, name='hello-world'),
-]
+router = DefaultRouter()
+router.register("employees", EmployeeViewSet, basename="employee")
+
+urlpatterns = router.urls

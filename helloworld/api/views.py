@@ -1,11 +1,8 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.viewsets import ModelViewSet
+from .models import Employee
+from .serializers import EmployeeSerializer
 
 
-@api_view(['GET'])
-def hello_world(request):
-    return Response(
-        {"message": "Hello, World!"},
-        status=status.HTTP_200_OK
-    )
+class EmployeeViewSet(ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
