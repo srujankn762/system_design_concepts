@@ -6,6 +6,6 @@ from rest_framework import status
 @api_view(['GET'])
 def hello_world(request):
     return Response(
-        {"message": "Hello, World!"},
+        {"message": "Hello, World new!"},
         status=status.HTTP_200_OK
     )
