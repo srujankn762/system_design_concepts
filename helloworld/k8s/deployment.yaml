@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: hello-world
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: hello-world
+
+  template:
+    metadata:
+      labels:
+        app: hello-world
+
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+
+      containers:
+        - name: hello-world
+          image: ghcr.io/srujankn762/hello-world-image:latest
+          ports:
+            - containerPort: 8055
