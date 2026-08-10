@@ -11,6 +11,6 @@ class EmployeeViewSet(ModelViewSet):
 
 def hello_world(request):
     return JsonResponse({
-        "message": "Hello World!",
+        "message": "Hello World this is working!",
         "status": "success"
     })
