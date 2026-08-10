@@ -2,17 +2,47 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Build') {
+        stage('Get Commit ID') {
             steps {
-                sh 'echo "Building hello-world application..."'
-                sh 'ls -la'
+                script {
+                    env.COMMIT_ID = sh(
+                        script: 'git rev-parse --short=4 HEAD',
+                        returnStdout: true
+                    ).trim()
+
+                    echo "Commit ID: ${env.COMMIT_ID}"
+                }
             }
+        }
+
+        stage('Docker Build') {
+            steps {
+                dir('helloworld') {
+                    sh """
+                        docker build \
+                          -t ghcr.io/srujankn762/hello-world-image:${COMMIT_ID} \
+                          .
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Docker image built successfully:"
+            echo "ghcr.io/srujankn762/hello-world-image:${COMMIT_ID}"
+        }
+
+        failure {
+            echo "Build failed."
         }
     }
 }
