@@ -4,6 +4,5 @@ from helloworld.api.views import hello_world
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
-    path("api/hello/", hello_world),
+    path('api/', include('api.urls'))
 ]
