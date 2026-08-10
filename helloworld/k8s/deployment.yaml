@@ -22,7 +22,7 @@ spec:
 
       containers:
         - name: hello-world
-          image: ghcr.io/srujankn762/hello-world-image:v2
+          image: ghcr.io/srujankn762/hello-world-image:f394
           ports:
             - containerPort: 8055
 
