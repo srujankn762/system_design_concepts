@@ -33,16 +33,38 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Push') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'ghcr-credentials',
+                        usernameVariable: 'GHCR_USER',
+                        passwordVariable: 'GHCR_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        echo "$GHCR_TOKEN" | docker login ghcr.io \
+                            -u "$GHCR_USER" \
+                            --password-stdin
+
+                        docker push ghcr.io/srujankn762/hello-world-image:${COMMIT_ID}
+
+                        docker logout ghcr.io
+                    '''
+                }
+            }
+        }
     }
 
     post {
         success {
-            echo "Docker image built successfully:"
+            echo "Image pushed successfully:"
             echo "ghcr.io/srujankn762/hello-world-image:${COMMIT_ID}"
         }
 
         failure {
-            echo "Build failed."
+            echo "Build or push failed."
         }
     }
 }
