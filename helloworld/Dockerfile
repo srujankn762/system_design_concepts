@@ -15,4 +15,4 @@ COPY . /srujan
 
 EXPOSE 8055
 
-CMD ["gunicorn", "helloworld.wsgi:application", "--bind", "0.0.0.0:8055", "--workers", "3"]
+CMD ["gunicorn", "python manage.py migrate && helloworld.wsgi:application", "--bind", "0.0.0.0:8055", "--workers", "3"]
