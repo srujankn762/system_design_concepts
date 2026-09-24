@@ -74,7 +74,7 @@ kubectl create secret docker-registry ghcr-secret \
     -n hello-world \
     --docker-server=ghcr.io \
     --docker-username=srujankn762 \
-    --docker-password="acs" \
+    --docker-password="{{GIT_TOKEN}}" \
     --docker-email=srujangowda762@gmail.com
 
 Each resource has a different purpose:
