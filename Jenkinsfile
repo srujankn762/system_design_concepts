@@ -1,5 +1,28 @@
 pipeline {
-    agent any
+    agent {
+        kubernetes {
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: kaniko
+      image: gcr.io/kaniko-project/executor:v1.23.2-debug
+      command:
+        - /busybox/sh
+      args:
+        - -c
+        - cat
+      tty: true
+      volumeMounts:
+        - name: kaniko-config
+          mountPath: /kaniko/.docker
+  volumes:
+    - name: kaniko-config
+      emptyDir: {}
+'''
+        }
+    }
 
     stages {
 
@@ -22,36 +45,27 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Build and Push Image') {
             steps {
-                dir('helloworld') {
-                    sh """
-                        docker build \
-                          -t ghcr.io/srujankn762/hello-world-image:${COMMIT_ID} \
-                          .
-                    """
-                }
-            }
-        }
+                container('kaniko') {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'ghcr-credentials',
+                            usernameVariable: 'GHCR_USER',
+                            passwordVariable: 'GHCR_TOKEN'
+                        )
+                    ]) {
+                        sh '''
+                            printf '{"auths":{"ghcr.io":{"username":"%s","password":"%s"}}}' \\
+                              "$GHCR_USER" "$GHCR_TOKEN" \\
+                              > /kaniko/.docker/config.json
 
-        stage('Docker Push') {
-            steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'ghcr-credentials',
-                        usernameVariable: 'GHCR_USER',
-                        passwordVariable: 'GHCR_TOKEN'
-                    )
-                ]) {
-                    sh '''
-                        echo "$GHCR_TOKEN" | docker login ghcr.io \
-                            -u "$GHCR_USER" \
-                            --password-stdin
-
-                        docker push ghcr.io/srujankn762/hello-world-image:${COMMIT_ID}
-
-                        docker logout ghcr.io
-                    '''
+                            /kaniko/executor \\
+                              --context "$WORKSPACE/helloworld" \\
+                              --dockerfile "$WORKSPACE/helloworld/Dockerfile" \\
+                              --destination "ghcr.io/srujankn762/hello-world-image:${COMMIT_ID}"
+                        '''
+                    }
                 }
             }
         }
