@@ -81,12 +81,12 @@ spec:
                 ]) {
                     sh '''
                         sed -i "s|image: ghcr.io/srujankn762/hello-world-image:.*|image: ghcr.io/srujankn762/hello-world-image:${COMMIT_ID}|" \
-                            helloworld/k8s/deployment.yaml
+                            k8s/deployment.yaml
 
                         git config user.name "jenkins"
                         git config user.email "jenkins@localhost"
 
-                        git add helloworld/k8s/deployment.yaml
+                        git add k8s/deployment.yaml
 
                         git commit -m "ci: deploy ${COMMIT_ID}" || echo "No manifest changes"
 
