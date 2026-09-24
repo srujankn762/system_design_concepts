@@ -50,3 +50,55 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 
 kubectl -n argocd get secret argocd-initial-admin-secret \
 -o jsonpath="{.data.password}" | base64 -d; echo
+
+#Create secret
+
+kubectl create secret generic postgres-secret \
+    -n hello-world \
+    --from-literal=POSTGRES_DB=hello_world \
+    --from-literal=POSTGRES_USER=postgres \
+    --from-literal=POSTGRES_PASSWORD=postgres
+
+#To fetch all the details of namespace use this command
+
+kubectl get deployment,svc,pods -n hello-world
+
+#To view logs
+kubectl logs deployment/hello-world -n hello-world
+kubectl logs deployment/postgres -n hello-world -f
+
+
+#To create secrets
+
+kubectl create secret docker-registry ghcr-secret \
+    -n hello-world \
+    --docker-server=ghcr.io \
+    --docker-username=srujankn762 \
+    --docker-password="acs" \
+    --docker-email=srujangowda762@gmail.com
+
+Each resource has a different purpose:
+
+  - Deployment: manages pod replicas and restarts them.
+  - StatefulSet: manages stateful pods with stable identity and storage.
+  - Service: provides stable networking to pods.
+  - PersistentVolumeClaim: requests durable storage.
+  - PersistentVolume: provides the actual storage.
+
+
+#JENKINS installation using helm
+
+brew install helm
+
+#
+helm repo add jenkinsci https://charts.jenkins.io
+
+#Downloads the latest chart information from configured repositories.
+helm repo update
+
+
+helm install jenkins jenkinsci/jenkins \
+    --namespace jenkins \
+    --values jenkins/jenkins-values.yaml
+
+jenkins password: 4Zyi8bCZH4U2lhjrKM6rc7
