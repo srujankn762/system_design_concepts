@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends     build-essen
 COPY requirements.txt /srujan
 RUN pip install -r requirements.txt
 
-COPY . /srujan
+COPY .. /srujan
 
 EXPOSE 8055
 
