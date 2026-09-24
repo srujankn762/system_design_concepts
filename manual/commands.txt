@@ -1,0 +1,52 @@
+# Apply Argo cd
+kubectl apply -f argocd/application.yaml
+
+# Install Argo cd
+kubectl apply \
+    --server-side \
+    --force-conflicts \
+    -n argocd \
+    -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+# https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml --> this is the official argocd installation manifest
+
+
+-->  kubectl get pods -n argocd
+NAME                                                READY   STATUS    RESTARTS   AGE
+argocd-application-controller-0                     1/1     Running   0          5m11s
+argocd-applicationset-controller-7f44d9c8d4-4plqx   1/1     Running   0          5m12s
+argocd-dex-server-5c944c746d-g7mmq                  1/1     Running   0          5m12s
+argocd-notifications-controller-5c69d94bb7-k8t77    1/1     Running   0          5m11s
+argocd-redis-7bb6c48f9-8rtxv                        1/1     Running   0          5m11s
+argocd-repo-server-7595c64db4-sxrdf                 1/1     Running   0          5m11s
+argocd-server-78cc97f5df-ssg62                      1/1     Running   0          5m11s
+
+--> kubectl get svc -n argocd
+NAME                                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+argocd-applicationset-controller          ClusterIP   10.101.155.247   <none>        7000/TCP,8080/TCP            5m30s
+argocd-dex-server                         ClusterIP   10.107.5.93      <none>        5556/TCP,5557/TCP,5558/TCP   5m30s
+argocd-metrics                            ClusterIP   10.105.141.86    <none>        8082/TCP                     5m30s
+argocd-notifications-controller-metrics   ClusterIP   10.109.219.106   <none>        9001/TCP                     5m30s
+argocd-redis                              ClusterIP   10.102.188.197   <none>        6379/TCP                     5m30s
+argocd-repo-server                        ClusterIP   10.111.80.134    <none>        8081/TCP,8084/TCP            5m30s
+argocd-server                             ClusterIP   10.109.210.131   <none>        80/TCP,443/TCP               5m30s
+argocd-server-metrics                     ClusterIP   10.99.164.38     <none>        8083/TCP                     5m30s
+
+
+# Run Argo cd
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+
+#kubectl port-forward creates a temporary connection from a port on your computer to a port inside Kubernetes.
+
+
+#Your computer:8080  →  argocd-server service:443
+
+  - svc/argocd-server: the Argo CD server Service
+  - -n argocd: finds it in the argocd namespace
+  - 8080:443: maps local port 8080 to Kubernetes port 443
+
+
+#Get the initial password:
+
+kubectl -n argocd get secret argocd-initial-admin-secret \
+-o jsonpath="{.data.password}" | base64 -d; echo
