@@ -67,7 +67,6 @@ kubectl get deployment,svc,pods -n hello-world
 kubectl logs deployment/hello-world -n hello-world
 kubectl logs deployment/postgres -n hello-world -f
 
-
 #To create secrets
 
 kubectl create secret docker-registry ghcr-secret \
