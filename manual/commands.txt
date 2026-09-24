@@ -89,7 +89,6 @@ Each resource has a different purpose:
 
 brew install helm
 
-#
 helm repo add jenkinsci https://charts.jenkins.io
 
 #Downloads the latest chart information from configured repositories.
